@@ -10,4 +10,12 @@ public class LogicaController {
     public void createAlumno (Alumno alumno){
         controllerPersistencia.createAlumno(alumno);
     }
+    
+    public void deleteAlumno (int id){
+        controllerPersistencia.deleteAlumno(id);
+    }
+    
+    public void editAlumno (Alumno alumno){
+        controllerPersistencia.editAlumno(alumno);
+    }
 }
