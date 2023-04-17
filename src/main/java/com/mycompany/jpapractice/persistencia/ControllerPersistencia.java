@@ -3,6 +3,8 @@ package com.mycompany.jpapractice.persistencia;
 
 import com.mycompany.jpapractice.logica.Alumno;
 import com.mycompany.jpapractice.persistencia.exceptions.NonexistentEntityException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +30,18 @@ public class ControllerPersistencia {
             alumnoJpaController.edit(alumno);
         } catch (Exception ex) {
             Logger.getLogger(ControllerPersistencia.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }}
+
+    
+    public Alumno getAlumno(int id) {
+       return alumnoJpaController.findAlumno(id);
+    }
+
+    public ArrayList<Alumno> getAlumnosList() {
+        List<Alumno> list = alumnoJpaController.findAlumnoEntities();
+        
+        ArrayList<Alumno> listAlumnos = new ArrayList<Alumno>(list);
+        
+        return listAlumnos;
     }
 }
