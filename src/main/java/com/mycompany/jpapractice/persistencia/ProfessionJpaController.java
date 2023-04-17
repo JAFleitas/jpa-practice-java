@@ -1,7 +1,7 @@
 
 package com.mycompany.jpapractice.persistencia;
 
-import com.mycompany.jpapractice.logica.Alumno;
+import com.mycompany.jpapractice.logica.Profession;
 import com.mycompany.jpapractice.persistencia.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.List;
@@ -13,27 +13,29 @@ import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-public class AlumnoJpaController implements Serializable {
 
-    public AlumnoJpaController(EntityManagerFactory emf) {
+public class ProfessionJpaController implements Serializable {
+
+    public ProfessionJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
-    public AlumnoJpaController () {
+    public ProfessionJpaController(){
+        
         emf = Persistence.createEntityManagerFactory("JPApracticePU");
     }
-    
+   
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
-    public void create(Alumno alumno) {
+    public void create(Profession profession) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(alumno);
+            em.persist(profession);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -42,19 +44,19 @@ public class AlumnoJpaController implements Serializable {
         }
     }
 
-    public void edit(Alumno alumno) throws NonexistentEntityException, Exception {
+    public void edit(Profession profession) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            alumno = em.merge(alumno);
+            profession = em.merge(profession);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = alumno.getId();
-                if (findAlumno(id) == null) {
-                    throw new NonexistentEntityException("The alumno with id " + id + " no longer exists.");
+                int id = profession.getId();
+                if (findProfession(id) == null) {
+                    throw new NonexistentEntityException("The profession with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -70,14 +72,14 @@ public class AlumnoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Alumno alumno;
+            Profession profession;
             try {
-                alumno = em.getReference(Alumno.class, id);
-                alumno.getId();
+                profession = em.getReference(Profession.class, id);
+                profession.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The alumno with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The profession with id " + id + " no longer exists.", enfe);
             }
-            em.remove(alumno);
+            em.remove(profession);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -86,19 +88,19 @@ public class AlumnoJpaController implements Serializable {
         }
     }
 
-    public List<Alumno> findAlumnoEntities() {
-        return findAlumnoEntities(true, -1, -1);
+    public List<Profession> findProfessionEntities() {
+        return findProfessionEntities(true, -1, -1);
     }
 
-    public List<Alumno> findAlumnoEntities(int maxResults, int firstResult) {
-        return findAlumnoEntities(false, maxResults, firstResult);
+    public List<Profession> findProfessionEntities(int maxResults, int firstResult) {
+        return findProfessionEntities(false, maxResults, firstResult);
     }
 
-    private List<Alumno> findAlumnoEntities(boolean all, int maxResults, int firstResult) {
+    private List<Profession> findProfessionEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Alumno.class));
+            cq.select(cq.from(Profession.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -110,20 +112,20 @@ public class AlumnoJpaController implements Serializable {
         }
     }
 
-    public Alumno findAlumno(int id) {
+    public Profession findProfession(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Alumno.class, id);
+            return em.find(Profession.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getAlumnoCount() {
+    public int getProfessionCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Alumno> rt = cq.from(Alumno.class);
+            Root<Profession> rt = cq.from(Profession.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
